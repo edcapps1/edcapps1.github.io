@@ -403,6 +403,14 @@ function recallData(uniqueCode) {
   const storedData = localStorage.getItem(uniqueCode);
 
   if (storedData) {
+    // Clear the current layout before appending the saved modules
+    ['Year-1', 'Year-2', 'Year-3', 'Year-4'].forEach(year => {
+      const yearRow = document.getElementById(year);
+      while (yearRow.firstChild) {
+        yearRow.removeChild(yearRow.firstChild);
+      }
+    });
+
     const modulesData = JSON.parse(storedData);
     modulesData.forEach(moduleData => {
       const moduleBox = createModuleBox(
