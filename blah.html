@@ -366,7 +366,6 @@ if (moduleName && credits && level && grade && subject) {
     const weightedAverage = calculateWeightedAverage(year.replace(' ', '-'));
     document.getElementById(`${year.replace(' ', '-')}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
 
-    addedModules.push(moduleBox); // Add this line
    // Save the added modules to local storage
    const uniqueCode = generateUniqueCode();
     localStorage.setItem(uniqueCode, JSON.stringify(addedModules.map(moduleBox => ({
