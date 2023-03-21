@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Picker</title>
+    <style>
+        /* Basic styling and layout */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition-duration: 0.4s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Input fields */
+        input[type="text"], select, input[type="number"] {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+}
+
+        /* Additional styling for specific elements can be added here */
+        .container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .year-row, .unsorted-row {
+    display: flex;
+    gap: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f5f5f5;
+  }
+
+  .module-box {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #fff;
+    cursor: move;
+    user-select: none;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+}
+h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: 16px;
+}
+
+.unsorted-row, .year-row {
+    min-height: 60px;
+}
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="module-entry">
+            <h2>Module Entry</h2>
+            <form id="module-form">
+                <div class="form-group">
+                    <label for="module-name">Module Name:</label>
+                    <input type="text" id="module-name" name="module-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="credits">Credits:</label>
+                    <input type="number" id="credits" name="credits" required>
+                </div>
+                <div class="form-group">
+                    <label for="level">Level:</label>
+                    <select id="level" name="level">
+                        <option value="LC">LC</option>
+                        <option value="LI">LI</option>
+                        <option value="LH">LH</option>
+                        <option value="LM">LM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="grade">Grade (as a percentage):</label>
+                    <input type="number" id="grade" name="grade" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <button type="button" id="add-module">Add</button>
+                <button type="button" id="undo">Undo</button>
+            </form>
+            
+        </div>
+
+        <div class="module-table">
+            <h2>Module List</h2>
+            <table id="module-list">
+                <thead>
+                    <tr>
+                        <th>Module Name</th>
+                        <th>Credits</th>
+                        <th>Level</th>
+                        <th>Grade</th>
+                        <th>Subject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- The table rows will be added dynamically using JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="container">
+            <h3>Unsorted Modules (<span id="unsorted-credits">0</span> credits)</h3>
+            <div class="unsorted-row" id="unsorted-row"></div>
+            
+            <h3>Year 1 (<span id="year-1-credits">0</span> credits)</h3>
+            <div class="year-row" id="year-1"></div>
+        
+            <h3>Year 2 (<span id="year-2-credits">0</span> credits)</h3>
+            <div class="year-row" id="year-2"></div>
+        
+            <h3>Year 3 (<span id="year-3-credits">0</span> credits)</h3>
+            <div class="year-row" id="year-3"></div>
+        
+            <h3>Year 4 (<span id="year-4-credits">0</span> credits)</h3>
+            <div class="year-row" id="year-4"></div>
+        </div>
+        
+        
+
+    <script>
+const addModuleBtn = document.getElementById('add-module');
+const undoBtn = document.getElementById('undo');
+const moduleForm = document.getElementById('module-form');
+const moduleList = document.getElementById('module-list').getElementsByTagName('tbody')[0];
+
+// Define these variables outside the event listeners
+let moduleName;
+let credits;
+let level;
+let grade;
+let subject;
+
+document.addEventListener('DOMContentLoaded', function() {
+    let lastAddedRow;
+
+    addModuleBtn.addEventListener('click', function() {
+        // Get the input values from the form
+        moduleName = document.getElementById('module-name').value;
+        credits = document.getElementById('credits').value;
+        level = document.getElementById('level').value;
+        grade = document.getElementById('grade').value;
+        subject = document.getElementById('subject').value;
+
+        // Create a new table row and cells
+        const newRow = moduleList.insertRow();
+        const moduleNameCell = newRow.insertCell(0);
+        const creditsCell = newRow.insertCell(1);
+        const levelCell = newRow.insertCell(2);
+        const gradeCell = newRow.insertCell(3);
+        const subjectCell = newRow.insertCell(4);
+
+        // Set the cell values based on the input
+        moduleNameCell.textContent = moduleName;
+        creditsCell.textContent = credits;
+        levelCell.textContent = level;
+        gradeCell.textContent = grade;
+        subjectCell.textContent = subject;
+
+        // Store the last added row
+        lastAddedRow = newRow;
+
+        // Create a module box and add it to the unsorted row
+        const moduleBox = createModuleBox(moduleName, credits, level, grade, subject);
+        document.getElementById('unsorted-row').appendChild(moduleBox);
+
+        // ...
+        document.getElementById('unsorted-row').appendChild(moduleBox);
+
+        // Reset the form fields
+        moduleForm.reset();
+
+        initSortableRows();
+
+        // Update credit totals
+        updateCreditTotals();
+
+        initSortableRows();
+
+    });
+
+    undoBtn.addEventListener('click', function() {
+        if (lastAddedRow) {
+            moduleList.removeChild(lastAddedRow);
+            lastAddedRow = null;
+        }
+    });
+});
+
+function createModuleBox(moduleName, credits, level, grade, subject) {
+    const maxWidth = 400; // Maximum width of a module box in pixels
+    const maxCredits = 60; // Maximum credits for a module
+
+    const moduleBox = document.createElement('div');
+    moduleBox.classList.add('module-box');
+    moduleBox.textContent = `${moduleName} (${credits} cr)`;
+    moduleBox.dataset.moduleName = moduleName;
+    moduleBox.dataset.credits = credits;
+    moduleBox.dataset.level = level;
+    moduleBox.dataset.grade = grade;
+    moduleBox.dataset.subject = subject;
+
+    const moduleWidth = (credits / maxCredits) * maxWidth;
+    moduleBox.style.width = `${moduleWidth}px`;
+
+    return moduleBox;
+}
+
+
+function initSortableRows() {
+  const rowIds = ['unsorted-row', 'year-1', 'year-2', 'year-3', 'year-4'];
+
+  rowIds.forEach(rowId => {
+    new Sortable(document.getElementById(rowId), {
+      group: 'shared',
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      dragClass: 'sortable-drag',
+      setStyles: false,
+      onAdd: function () {
+        updateCreditTotals();
+      },
+      onRemove: function () {
+        updateCreditTotals();
+      }
+    });
+  });
+}
+
+
+
+function updateCreditTotals() {
+    const rows = ['unsorted', 'year-1', 'year-2', 'year-3', 'year-4'];
+    rows.forEach(rowId => {
+        const row = document.getElementById(rowId);
+        if (row) {
+            const moduleBoxes = row.querySelectorAll('.module-box');
+            const totalCredits = Array.from(moduleBoxes).reduce((total, moduleBox) => total + parseInt(moduleBox.dataset.credits), 0);
+            document.getElementById(`${rowId}-credits`).textContent = totalCredits;
+        }
+    });
+}
+
+
+    </script>
+</body>
+</html>

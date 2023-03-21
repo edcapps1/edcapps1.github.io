@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module Picker</title>
+    <title>Liberal Arts and Natural Sciences Degree Planner</title>
     <style>
         /* Basic styling and layout */
         body {
@@ -12,9 +14,49 @@
             color: #333;
             background-color: #f5f5f5;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
+        /* Style the header */
+            header {
+            background-color: #6e2dbe;
+            padding: 1rem;
+            }
 
+            header h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-family: sans-serif
+            }
+
+            /* Style the navigation menu */
+            nav ul {
+            display: flex;
+            list-style-type: none;
+            border: 1px #2c3e50;
+            border-color: #ecf0f1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            }
+
+            nav li {
+            margin-right: 1rem;
+            }
+
+            nav a {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            text-decoration: none;
+            color: #ecf0f1;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            }
+
+            nav a:hover {
+            color: #2c3e50;
+            background-color: #ecf0f1;
+            border-color: #ecf0f1;
+            }
         #app {
             max-width: 1200px;
             margin: 0 auto;
@@ -44,6 +86,7 @@
             cursor: pointer;
             border-radius: 8px;
             transition-duration: 0.4s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         button:hover {
@@ -51,71 +94,495 @@
         }
 
         /* Input fields */
-        input[type="text"], select {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
+        input[type="text"], select, input[type="number"] {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+}
 
         /* Additional styling for specific elements can be added here */
+        .container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .year-row, .unsorted-row {
+    display: flex;
+    gap: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f5f5f5;
+    position: relative;
+    transition: background-color 0.3s ease;
+  }
+  .temporary-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+  .module-box {
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: #f0f0f0;
+}
+.module-box.purple {
+  background-color: #b19cd9;
+}
+
+.year-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+}
+h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: 16px;
+    color: #000000;
+  text-transform: uppercase;
+}
+
+.unsorted-row, .year-row {
+    min-height: 60px;
+}
+
+.tick {
+position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  display: none;
+  text-align: center;
+  line-height: 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px #333;
+}
+
+
     </style>
 </head>
 <body>
-    <div id="app">
+    <header>
+        <h1>Liberal Arts and Natural Sciences Degree Planner</h1>
+        <nav>
+          <ul>
+            <li><a href="main.html">Main</a></li>
+            <li><a href="stage-2-selector.html">Stage 2 Selector</a></li>
+            <li><a href="grade-calculator.html">Grade Calculator</a></li>
+          </ul>
+        </nav>
+      </header>
+      <p>Here you'll see the way to enter your modules one by one. There is a tray below for all uncatagorised modules, from here click and drag them into their respective years. Then you'll be able to see what each year has withinit, how many credits at each level, allowing you to see your major and natural science credits. </p>
+      
+      <div id="app">
         <div class="module-entry">
             <h2>Module Entry</h2>
             <form id="module-form">
-                <label for="module-name">Module Name:</label>
-                <input type="text" id="module-name" name="module-name" required>
+                <div class="form-group">
+                    <label for="module-name">Module Name:</label>
+                    <input type="text" id="module-name" name="module-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="credits">Credits:</label>
+                    <input type="number" id="credits" name="credits" required>
+                </div>
+                <div class="form-group">
+                    <label for="level">Level:</label>
+                    <select id="level" name="level">
+                        <option value="LC">LC</option>
+                        <option value="LI">LI</option>
+                        <option value="LH">LH</option>
+                        <option value="LM">LM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="grade">Grade (as a percentage):</label>
+                    <input type="number" id="grade" name="grade" required>
+                </div>
+                <div class="form-group">
+                    <label for="count-as-major">Count as major?</label>
+                    <input type="checkbox" id="count-as-major" name="count-as-major">
+                </div>
+                <div class="form-group">
+                    <label for="year">Year:</label>
+                    <select id="year" name="year">
+                      <option value="Year 1">Year 1</option>
+                      <option value="Year 2">Year 2</option>
+                      <option value="Year 3">Year 3</option>
+                      <option value="Year 4">Year 4</option>
+                    </select>
+                  </div>
+                  
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <select id="subject" name="subject">
+                        <option value="Accounting and Finance">Accounting and Finance</option>
+                        <option value="Art History">Art History</option>
+                        <option value="Astrophysics">Astrophysics</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Business Analytics">Business Analytics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Classics">Classics</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Drama and Theatre Arts">Drama and Theatre Arts</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Education Studies">Education Studies</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="English">English</option>
+                        <option value="Environmental Science">Environmental Science</option>
+                        <option value="Film Studies">Film Studies</option>
+                        <option value="French Studies">French Studies</option>
+                        <option value="Gender Studies">Gender Studies</option>
+                        <option value="Geography">Geography</option>
+                        <option value="German Studies">German Studies</option>
+                        <option value="Hispanic Studies">Hispanic Studies</option>
+                        <option value="History">History</option>
+                        <option value="International Business">International Business</option>
+                        <option value="IR">IR</option>
+                        <option value="Italian Studies">Italian Studies</option>
+                        <option value="Liberal Arts and Sciences">Liberal Arts and Sciences</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Music">Music</option>
+                        <option value="Other">Other</option>
+                        <option value="Philosophy">Philosophy</option>
+                        <option value="Philosophy, Politics and Economics (PPE)">Philosophy, Politics and Economics (PPE)</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Politics">Politics</option>
+                        <option value="Psychology">Psychology</option>
+                        <option value="Russian Studies">Russian Studies</option>
+                        <option value="Social Policy">Social Policy</option>
+                        <option value="Sociology">Sociology</option>
+                        <option value="Sport and Exercise Sciences">Sport and Exercise Sciences</option>
 
-                <label for="credits">Credits:</label>
-                <input type="number" id="credits" name="credits" required>
-
-                <label for="level">Level:</label>
-                <select id="level" name="level">
-                    <option value="LC">LC</option>
-                    <option value="LI">LI</option>
-                    <option value="LH">LH</option>
-                    <option value="LM">LM</option>
-                </select>
-
-                <label for="grade">Grade (as a percentage):</label>
-                <input type="number" id="grade" name="grade" required>
-
-                <label for="subject">Subject:</label>
-                <input type="text" id="subject" name="subject" required>
-
+                    </select>
+                    <div id="custom-subject-container" style="display: none;">
+                        <input type="text" id="custom-subject" name="custom-subject" placeholder="Enter your custom subject">
+                    </div>
+                </div>
+                
+                </div>
                 <button type="button" id="add-module">Add</button>
                 <button type="button" id="undo">Undo</button>
             </form>
-        </div>
+            <div class="form-group"><input type="text" id="unique-code" placeholder="Enter unique code">
+            <button id="recall-data">Recall Data</button>
 
-        <div class="module-table">
-            <h2>Module List</h2>
-            <table id="module-list">
-                <thead>
-                    <tr>
-                        <th>Module Name</th>
-                        <th>Credits</th>
-                        <th>Level</th>
-                        <th>Grade</th>
-                        <th>Subject</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- The table rows will be added dynamically using JavaScript -->
-                </tbody>
-            </table>
+            </div>
+
         </div>
+      
         
-    </div>
+        <h2>Year 1 Credits </h2>
+     
+<div class="year-row" id="Year-1"></div>
+<p id="Year-1-credits">Total Credits:0</p>
+<p id="Year-1-major">Major: ❌</p>
+<p id="Year-1-weighted-average">Weighted Average: 0 %</p>
+<h2>Year 2 Credits </h2>
+<div class="year-row" id="Year-2"></div>
+<p id="Year-2-credits">Total Credits: 0</p>
+<p id="Year-2-major">Major: ❌</p>
+<p id="Year-2-weighted-average">Weighted Average: 0 %</p>
+<h2>Year 3 Credits </h2>
+<div class="year-row" id="Year-3"></div>
+<p id="Year-3-credits">Total Credits:0</p>
+<p id="Year-3-major">Major: ❌</p>
+<p id="Year-3-weighted-average">Weighted Average: 0 %</p>
+<h2>Year 4 Credits </h2>
+<div class="year-row" id="Year-4"></div>
+<p id="Year-4-credits">Total Credits:0</p>
+<p id="Year-4-major">Major: ❌</p>
+<p id="Year-4-weighted-average">Weighted Average: 0 %</p>
+        
 
-    <script>
-        // Add your JavaScript code here
+      
+      <script>
+
+
+const addedModules = [];
+
+document.getElementById('add-module').addEventListener('click', () => {
+  const moduleName = document.getElementById('module-name').value;
+  const credits = parseInt(document.getElementById('credits').value);
+  const level = document.getElementById('level').value;
+  const grade = parseInt(document.getElementById('grade').value);
+  const subject = document.getElementById('subject').value;
+  const year = document.getElementById('year').options[document.getElementById('year').selectedIndex].text;
+  const countAsMajor = document.getElementById('count-as-major').checked; // Add this line
+
+  
+
+if (!['Year 1', 'Year 2', 'Year 3', 'Year 4'].includes(year)) {
+  alert('Invalid year selected. Please select a valid year.');
+  return;
+}
+
+if (moduleName && credits && level && grade && subject) {
+    const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
+    const yearRow = document.getElementById(year.replace(' ', '-'));
+    yearRow.appendChild(moduleBox);
+    addedModules.push(moduleBox);
+
+    // Update the credit counter for the selected year
+    const yearCreditsElement = document.getElementById(`${year.replace(' ', '-')}-credits`);
+    const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
+    yearCreditsElement.textContent = `Total Credits: ${currentYearCredits + credits}`;
+    updateMajorStatus(year.replace(' ', '-'));
+
+    // After adding a module
+    const weightedAverage = calculateWeightedAverage(year.replace(' ', '-'));
+    document.getElementById(`${year.replace(' ', '-')}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+    addedModules.push(moduleBox); // Add this line
+   // Save the added modules to local storage
+   const uniqueCode = generateUniqueCode();
+    localStorage.setItem(uniqueCode, JSON.stringify(addedModules.map(moduleBox => ({
+      moduleName: moduleBox.querySelector('h3').textContent,
+      credits: moduleBox.dataset.credits,
+      level: moduleBox.dataset.level,
+      grade: moduleBox.dataset.grade,
+      subject: moduleBox.dataset.subject,
+      year: moduleBox.dataset.year,
+      countAsMajor: moduleBox.dataset.countAsMajor
+    }))));
+
+    // Show the unique code to the user
+    showTemporaryMessage(`Module added. Unique code: ${uniqueCode}`, 5000);
+
+    // Reset the form
+    document.getElementById('module-name').value = '';
+    document.getElementById('grade').value = '';
+
+  // Show a temporary message
+  showTemporaryMessage('Module added', 2000);
+
+  
+} else {
+  alert('Please fill in all fields before adding a module.');
+
+  
+
+}
+
+});
+
+function recallData(uniqueCode) {
+  const storedData = localStorage.getItem(uniqueCode);
+
+  if (storedData) {
+    const modulesData = JSON.parse(storedData);
+    modulesData.forEach(moduleData => {
+      const moduleBox = createModuleBox(
+        moduleData.moduleName,
+        parseInt(moduleData.credits),
+        moduleData.level,
+        parseInt(moduleData.grade),
+        moduleData.subject,
+        moduleData.year,
+        moduleData.countAsMajor === 'true'
+      );
+
+      const yearRow = document.getElementById(moduleData.year.replace(' ', '-'));
+      yearRow.appendChild(moduleBox);
+      addedModules.push(moduleBox);
+
+      // Update the credit counter for the selected year
+      const yearCreditsElement = document.getElementById(`${moduleData.year.replace(' ', '-')}-credits`);
+      const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
+      yearCreditsElement.textContent = `Total Credits: ${currentYearCredits + parseInt(moduleData.credits)}`;
+      updateMajorStatus(moduleData.year.replace(' ', '-'));
+    });
+  } else {
+    alert('Invalid unique code. Please enter a valid code.');
+  }
+}
+
+function updateMajorStatus(year) {
+  const yearRow = document.getElementById(year);
+  const majorModules = Array.from(yearRow.getElementsByClassName('module-box')).filter(
+    (moduleBox) => moduleBox.dataset.countAsMajor === 'true'
+  );
+  const majorCredits = majorModules.reduce(
+    (sum, moduleBox) => sum + parseInt(moduleBox.dataset.credits), 0
+  );
+
+  const majorTickElement = document.getElementById(`${year}-major`);
+
+  if (majorCredits >= 60) {
+    majorTickElement.textContent = 'Major: ✅';
+  } else {
+    majorTickElement.textContent = 'Major: ❌';
+  }
+}
+
+function calculateWeightedAverage(year) {
+  const yearRow = document.getElementById(year);
+  const modules = Array.from(yearRow.getElementsByClassName('module-box'));
+  const totalCredits = modules.reduce(
+    (sum, moduleBox) => sum + parseInt(moduleBox.dataset.credits), 0
+  );
+  
+  const weightedGradeSum = modules.reduce(
+    (sum, moduleBox) => sum + parseInt(moduleBox.dataset.credits) * parseInt(moduleBox.dataset.grade), 0
+  );
+
+  if (totalCredits === 0) {
+    return 0;
+  }
+
+  return weightedGradeSum / totalCredits;
+}
+
+
+
+function showTemporaryMessage(message, duration = 2000) {
+  const messageElement = document.createElement('div');
+  messageElement.className = 'temporary-message';
+  messageElement.textContent = message;
+
+  document.body.appendChild(messageElement);
+
+  setTimeout(() => {
+    messageElement.remove();
+  }, duration);
+}
+
+const undoButton = document.getElementById('undo');
+undoButton.addEventListener('click', undoLastModule);
+
+
+// event listener for recall-data
+
+document.getElementById('recall-data').addEventListener('click', () => {
+  const uniqueCode = document.getElementById('unique-code').value;
+  recallData(uniqueCode);
+});
+
+
+function createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor, color = null, isEditable = false) {
+  const moduleBox = document.createElement('div');
+  moduleBox.className = 'module-box';
+  if (color) {
+    moduleBox.classList.add(color);
+  }
+  moduleBox.dataset.credits = credits;
+  moduleBox.dataset.level = level;
+  moduleBox.dataset.grade = grade;
+  moduleBox.dataset.subject = subject;
+  moduleBox.dataset.year = year;
+  moduleBox.dataset.countAsMajor = countAsMajor; // Add this line
+
+  const moduleWidth = (credits / 20) * 350;
+  moduleBox.style.width = `${moduleWidth}px`;
+
+  const moduleTitle = document.createElement('h3');
+  moduleTitle.textContent = moduleName;
+  moduleBox.appendChild(moduleTitle);
+
+  const moduleInfo = document.createElement('p');
+  moduleInfo.textContent = `${credits} cr, ${level}, `;
+  moduleBox.appendChild(moduleInfo);
+
+  if (isEditable) {
+    const gradeInput = document.createElement('input');
+    gradeInput.type = 'number';
+    gradeInput.value = grade;
+    gradeInput.classList.add('editable-grade');
+    moduleInfo.appendChild(gradeInput);
+    moduleInfo.appendChild(document.createTextNode(`%, ${subject}`));
+  } else {
+    moduleInfo.textContent += `${grade}%, ${subject}`;
+  }
+
+  return moduleBox;
+}
+function undoLastModule() {
+  if (addedModules.length > 0) {
+    const lastModuleBox = addedModules.pop();
+
+    // Remove the module box from the DOM
+    lastModuleBox.parentNode.removeChild(lastModuleBox);
+
+    // Update the credit counter for the selected year
+    const year = lastModuleBox.dataset.year;
+    const yearCreditsElement = document.getElementById(`${year}-credits`);
+    const creditsToRemove = parseInt(lastModuleBox.dataset.credits);
+    const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
+    yearCreditsElement.textContent = `Total Credits: ${currentYearCredits - creditsToRemove}`;
+    updateMajorStatus(year); // Add this line
+
+    // After undoing a module
+const weightedAverage = calculateWeightedAverage(year);
+document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+
+
+
+  }
+}
+
+
+// Here is added FRTP modules
+const defaultModules = [
+  {
+    moduleName: 'FRTP I',
+    credits: 10,
+    level: 'LC',
+    grade: 0,
+    subject: 'Liberal Arts and Sciences',
+    year: 'Year 1',
+    color: 'purple',
+  },
+  {
+    moduleName: 'FRTP II',
+    credits: 10,
+    level: 'LC',
+    grade: 0,
+    subject: 'Liberal Arts and Sciences',
+    year: 'Year 1',
+    color: 'purple',
+  },
+];
+
+function generateUniqueCode() {
+  return Math.random().toString(36).substr(2, 8);
+}
+
+
     </script>
 </body>
 </html>
