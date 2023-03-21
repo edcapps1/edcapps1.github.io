@@ -498,7 +498,50 @@ document.getElementById('recall-data').addEventListener('click', () => {
   recallData(uniqueCode);
 });
 
+const subjectColors = {
+  'Accounting and Finance': '#FFE8D6',
+    'Art History': '#FFD1DC',
+    'Astrophysics': '#F1D1FF',
+    'Biology': '#FFF7B2',
+    'Business Analytics': '#C9EFFF',
+    'Chemistry': '#D6FFF5',
+    'Classics': '#E1D1FF',
+    'Computer Science': '#D8EFFF',
+    'Drama and Theatre Arts': '#FFD1E1',
+    'Economics': '#F1E6FF',
+    'Education Studies': '#FFE5D1',
+    'Engineering': '#FFE9D9',
+    'English': '#E5FCE1',
+    'Environmental Science': '#C3FFF2',
+    'Film Studies': '#FFE1FF',
+    'French Studies': '#FFD1F7',
+    'Gender Studies': '#EBCEDF',
+    'Geography': '#F0EFC3',
+    'German Studies': '#D6FFF5',
+    'Hispanic Studies': '#D1E8FF',
+    'History': '#FFE1D1',
+    'International Business': '#FFE1D9',
+    'IR': '#F0D7FF',
+    'Italian Studies': '#FFE1D1',
+    'Liberal Arts and Sciences': '#FFE5C4',
+    'Marketing': '#FFEED1',
+    'Mathematics': '#C3F2E8',
+    'Music': '#D1FFEC',
+    'Other': '#C2F2D0',
+    'Philosophy': '#E6DCEB',
+    'Philosophy, Politics and Economics (PPE)': '#E1D1FF',
+    'Physics': '#FFD3D3',
+    'Politics': '#F1D1FF',
+    'Psychology': '#F9E1D7',
+    'Russian Studies': '#C2E9FF',
+    'Social Policy': '#FFE1D1',
+    'Sociology': '#D9E0F2',
+    'Sport and Exercise Sciences': '#D1FFD3'
 
+
+
+
+}
 function createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor, color = null, isEditable = false) {
   const moduleBox = document.createElement('div');
   moduleBox.className = 'module-box';
@@ -510,7 +553,9 @@ function createModuleBox(moduleName, credits, level, grade, subject, year, count
   moduleBox.dataset.grade = grade;
   moduleBox.dataset.subject = subject;
   moduleBox.dataset.year = year;
-  moduleBox.dataset.countAsMajor = countAsMajor; // Add this line
+  moduleBox.dataset.countAsMajor = countAsMajor;
+
+  moduleBox.style.backgroundColor = subjectColors[subject] || '#C2F2D0'; // Add this line
 
   const moduleWidth = (credits / 20) * 350;
   moduleBox.style.width = `${moduleWidth}px`;
@@ -536,6 +581,7 @@ function createModuleBox(moduleName, credits, level, grade, subject, year, count
 
   return moduleBox;
 }
+
 function undoLastModule() {
   if (addedModules.length > 0) {
     const lastModuleBox = addedModules.pop();
