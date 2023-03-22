@@ -436,18 +436,16 @@ document.getElementById('add-module').addEventListener('click', () => {
   const level = document.getElementById('level').value;
   const grade = parseInt(document.getElementById('grade').value);
   const subject = document.getElementById('subject').value;
-  const year = document.getElementById('year').options[document.getElementById('year').selectedIndex].text;
-  const countAsMajor = document.getElementById('count-as-major').checked; // Add this line
+  const year = document.getElementById('year').value;
+  const countAsMajor = document.getElementById('count-as-major').checked;
 
-  
+  if (!['Year 1', 'Year 2', 'Year 3', 'Year 4'].includes(year)) {
+    alert('Invalid year selected. Please select a valid year.');
+    return;
+  }
 
-if (!['Year 1', 'Year 2', 'Year 3', 'Year 4'].includes(year)) {
-  alert('Invalid year selected. Please select a valid year.');
-  return;
-}
-
-if (moduleName && credits && level && grade && subject) {
-    const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
+  if (moduleName && credits && level && grade && subject) {
+    const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor);
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
     addedModules.push(moduleBox);
@@ -481,18 +479,19 @@ if (moduleName && credits && level && grade && subject) {
     document.getElementById('module-name').value = '';
     document.getElementById('grade').value = '';
 
-  // Show a temporary message
-  showTemporaryMessage('Module added', 2000);
+    // Show a temporary message
+    showTemporaryMessage('Module added', 2000);
 
-  
-} else {
+  } else {
   alert('Please fill in all fields before adding a module.');
 
   
-
-}
-
+  }
 });
+
+
+
+  
 
 function recallData(uniqueCode) {
   const storedData = localStorage.getItem(uniqueCode);
