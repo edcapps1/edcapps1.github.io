@@ -341,20 +341,22 @@ position: absolute;
 // Scanning the Json files for the data and giving it the ability to be added:
 
 // Adding in the json files 
-async function loadModuleData(fileUrl) {
-  const response = await fetch(fileUrl);
-  const moduleData = await response.json();
-  return moduleData;
-}
 
-async function loadAllModuleData() {
-  const lcModules = await loadModuleData('./lc_modules.json');
-  const liModules = await loadModuleData('./li_modules.json');
-  const lhModules = await loadModuleData('./lh_modules.json');
-  
-  return [...lcModules, ...liModules, ...lhModules];
-}
+async function loadModules() {
+  try {
+    const response1 = await fetch('./lc_modules.json');
+    const response2 = await fetch('./li_modules.json');
+    const response3 = await fetch('./lh_modules.json');
 
+    const json1 = await response1.json();
+    const json2 = await response2.json();
+    const json3 = await response3.json();
+
+    return [...json1, ...json2, ...json3];
+  } catch (error) {
+    console.error('Error loading module JSON files:', error);
+  }
+}
 
 
 // Load module data on page load
