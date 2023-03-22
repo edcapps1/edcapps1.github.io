@@ -212,7 +212,7 @@ position: absolute;
             <form id="module-form">
                 <div class="form-group">
                     <label for="module-name">Module Name:</label>
-                    <input list="module-titles" id="module-name" type="text" placeholder="Module Name">
+                    <input list="module-names" id="module-name" type="text" placeholder="Module Name">
                       <datalist id="module-titles"></datalist>
 
                 </div>
@@ -315,25 +315,25 @@ position: absolute;
         
         <h2>Year 1 Credits </h2>
      
-<div class="year-row" id="Year-1"></div>
-<p id="Year-1-credits">Total Credits:0</p>
-<p id="Year-1-major">Major: ❌</p>
-<p id="Year-1-weighted-average">Weighted Average: 0 %</p>
-<h2>Year 2 Credits </h2>
-<div class="year-row" id="Year-2"></div>
-<p id="Year-2-credits">Total Credits: 0</p>
-<p id="Year-2-major">Major: ❌</p>
-<p id="Year-2-weighted-average">Weighted Average: 0 %</p>
-<h2>Year 3 Credits </h2>
-<div class="year-row" id="Year-3"></div>
-<p id="Year-3-credits">Total Credits:0</p>
-<p id="Year-3-major">Major: ❌</p>
-<p id="Year-3-weighted-average">Weighted Average: 0 %</p>
-<h2>Year 4 Credits </h2>
-<div class="year-row" id="Year-4"></div>
-<p id="Year-4-credits">Total Credits:0</p>
-<p id="Year-4-major">Major: ❌</p>
-<p id="Year-4-weighted-average">Weighted Average: 0 %</p>
+        <div class="year-row" id="Year-1"></div>
+        <p id="Year-1-credits">Total Credits:0</p>
+        <p id="Year-1-major">Major: ❌</p>
+        <p id="Year-1-weighted-average">Weighted Average: 0 %</p>
+        <h2>Year 2 Credits </h2>
+        <div class="year-row" id="Year-2"></div>
+        <p id="Year-2-credits">Total Credits: 0</p>
+        <p id="Year-2-major">Major: ❌</p>
+        <p id="Year-2-weighted-average">Weighted Average: 0 %</p>
+        <h2>Year 3 Credits </h2>
+        <div class="year-row" id="Year-3"></div>
+        <p id="Year-3-credits">Total Credits:0</p>
+        <p id="Year-3-major">Major: ❌</p>
+        <p id="Year-3-weighted-average">Weighted Average: 0 %</p>
+        <h2>Year 4 Credits </h2>
+        <div class="year-row" id="Year-4"></div>
+        <p id="Year-4-credits">Total Credits:0</p>
+        <p id="Year-4-major">Major: ❌</p>
+        <p id="Year-4-weighted-average">Weighted Average: 0 %</p>
         
 
       
@@ -376,30 +376,31 @@ function populateTitlesDatalist() {
 }
 
 // Event listener for module code input
-document.getElementById('module-code').addEventListener('keyup', () => {
+document.getElementById('module-code').addEventListener('input', () => {
   const query = document.getElementById('module-code').value;
   findModuleByCode(query);
 });
 
 // Event listener for module name input
-document.getElementById('module-name').addEventListener('keyup', () => {
+document.getElementById('module-name').addEventListener('input', () => {
   const query = document.getElementById('module-name').value;
-  filterModuleTitles(query);
+  findModuleByTitle(query);
 });
 
+
 // Filter module titles based on user input
-function filterModuleTitles(query) {
-  const moduleTitlesDatalist = document.getElementById('module-titles');
-  moduleTitlesDatalist.innerHTML = '';
-  
-  const filteredModules = allModules.filter(module => module.title.toLowerCase().startsWith(query.toLowerCase()));
-  
-  filteredModules.forEach(module => {
+function findModuleByTitle(query) {
+  const matchedModules = allModules.filter(module => module.title.toLowerCase().includes(query.toLowerCase()));
+  const moduleNamesDatalist = document.getElementById('module-names');
+  moduleNamesDatalist.innerHTML = '';
+
+  matchedModules.forEach(module => {
     const option = document.createElement('option');
     option.value = module.title;
-    moduleTitlesDatalist.appendChild(option);
+    moduleNamesDatalist.appendChild(option);
   });
 }
+
 
 // Event listener for search button
 document.getElementById('search-module').addEventListener('click', () => {
