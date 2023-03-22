@@ -434,7 +434,9 @@ document.getElementById('add-module').addEventListener('click', () => {
   const credits = parseInt(document.getElementById('credits').value);
   const level = document.getElementById('level').value;
   const grade = parseInt(document.getElementById('grade').value);
-  const subject = document.getElementById('subject').value;
+  const moduleSubject = document.createElement('span');
+    moduleSubject.textContent = subject;
+    moduleInfo.appendChild(moduleSubject);  
   const year = document.getElementById('year').value;
   const countAsMajor = document.getElementById('count-as-major').checked;
 
