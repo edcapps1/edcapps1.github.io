@@ -358,70 +358,73 @@ async function loadModules() {
   }
 }
 
-
-// Load module data on page load
 let allModules = [];
-loadAllModuleData().then(data => {
+loadModules().then(data => {
   allModules = data;
   populateDatalist();
   populateTitlesDatalist();
 });
 
-//populate the list with module titles
+function populateDatalist() {
+  const moduleCodesDatalist = document.getElementById('module-codes');
+  allModules.forEach(module => {
+    const option = document.createElement('option');
+    option.value = module.moduleCode;
+    moduleCodesDatalist.appendChild(option);
+  });
+}
+
 function populateTitlesDatalist() {
   const moduleTitlesDatalist = document.getElementById('module-titles');
   allModules.forEach(module => {
     const option = document.createElement('option');
-    option.value = module.title;
+    option.value = module.moduleName;
     moduleTitlesDatalist.appendChild(option);
   });
 }
 
-// Event listener for module code input
 document.getElementById('module-code').addEventListener('input', () => {
-  const query = document.getElementById('module-code').value;
-  findModuleByCode(query);
+  const query = parseFloat(document.getElementById('module-code').value);
+  if (query) {
+    findModuleByCode(query);
+  }
 });
 
-// Event listener for module name input
 document.getElementById('module-name').addEventListener('input', () => {
   const query = document.getElementById('module-name').value;
-  findModuleByTitle(query);
+  if (query) {
+    findModuleByTitle(query);
+  }
 });
 
-
-// Filter module titles based on user input
 function findModuleByTitle(query) {
-  const matchedModules = allModules.filter(module => module.title.toLowerCase().includes(query.toLowerCase()));
-  const moduleNamesDatalist = document.getElementById('module-names');
-  moduleNamesDatalist.innerHTML = '';
-
-  matchedModules.forEach(module => {
-    const option = document.createElement('option');
-    option.value = module.title;
-    moduleNamesDatalist.appendChild(option);
-  });
+  const matchedModule = allModules.find(module => module.moduleName.toLowerCase() === query.toLowerCase());
+  if (matchedModule) {
+    document.getElementById('module-code').value = matchedModule.moduleCode;
+  }
 }
 
-
-// Event listener for search button
-document.getElementById('search-module').addEventListener('click', () => {
-  const query = document.getElementById('module-code').value;
-  findModuleByCode(query);
+document.getElementById('search-module').addEventListener('click', (e) => {
+  e.preventDefault();
+  const query = parseFloat(document.getElementById('module-code').value);
+  if (query) {
+    findModuleByCode(query);
+  }
 });
 
-// Find module by code and update the form with the module data
 function findModuleByCode(query) {
-  const matchedModule = allModules.find(module => module.code.toLowerCase() === query.toLowerCase());
+  const matchedModule = allModules.find(module => module.moduleCode === query);
   if (matchedModule) {
-    document.getElementById('module-name').value = matchedModule.title;
+    document.getElementById('module-name').value = matchedModule.moduleName;
     document.getElementById('credits').value = matchedModule.credits;
     document.getElementById('level').value = matchedModule.level;
-    document.getElementById('subject').value = matchedModule.subject;
+    // You need to add an element with the id "subject" in your HTML to display the subject
+    // document.getElementById('subject').value = matchedModule.subject;
   } else {
     alert('Module not found');
   }
 }
+
 
 
 
