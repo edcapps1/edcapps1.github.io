@@ -494,15 +494,16 @@ function findModuleByCode(query) {
 
 
 const addedModules = [];
-
+// Main adding module function
 document.getElementById('add-module').addEventListener('click', () => {
   const moduleName = document.getElementById('module-name').value;
   const credits = parseInt(document.getElementById('credits').value);
   const level = document.getElementById('level').value;
   const grade = parseInt(document.getElementById('grade').value);
+  const matchedModule = allModules.find(module => module.moduleCode === document.getElementById('module-code').value.trim());
   const moduleSubject = document.createElement('span');
-    moduleSubject.textContent = subject;
-    moduleInfo.appendChild(moduleSubject);  
+  moduleSubject.textContent = matchedModule.subject;
+  moduleInfo.appendChild(moduleSubject);
   const year = document.getElementById('year').value;
   const countAsMajor = document.getElementById('count-as-major').checked;
 
@@ -511,8 +512,9 @@ document.getElementById('add-module').addEventListener('click', () => {
     return;
   }
 
-  if (moduleName && credits && level && grade && subject) {
-    const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor);
+  if (moduleName && credits && level && grade && moduleSubject) {
+
+    const moduleBox = createModuleBox(moduleName, credits, level, grade, modulesubject, year, countAsMajor);
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
     addedModules.push(moduleBox);
