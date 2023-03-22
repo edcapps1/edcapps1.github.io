@@ -359,33 +359,37 @@ position: absolute;
 <p id="Year-1-credits">Total Credits:0</p>
 <p id="Year-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-1-major">Major: ❌</p>
+<div id="Year-1-level-count" class="level-count"></div>
 <p id="Year-1-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 2 Credits </h2>
 <div class="year-row" id="Year-2"></div>
 <p id="Year-2-credits">Total Credits: 0</p>
 <p id="Year-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-2-major">Major: ❌</p>
+<div id="Year-2-level-count" class="level-count"></div>
 <p id="Year-2-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 3 Credits </h2>
 <div class="year-row" id="Year-3"></div>
 <p id="Year-3-credits">Total Credits:0</p>
 <p id="Year-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-3-major">Major: ❌</p>
+<div id="Year-2-level-count" class="level-count"></div>
 <p id="Year-3-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 4 Credits </h2>
 <div class="year-row" id="Year-4"></div>
 <p id="Year-4-credits">Total Credits:0</p>
 <p id="Year-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-4-major">Major: ❌</p>
+<div id="Year-2-level-count" class="level-count"></div>
 <p id="Year-4-weighted-average">Weighted Average: 0 %</p>
         
 
       
-      <script>
-
+<script>
 
 const addedModules = [];
 
+//Form Details, creating the array of modules
 document.getElementById('add-module').addEventListener('click', () => {
   const moduleName = document.getElementById('module-name').value;
   const credits = parseInt(document.getElementById('credits').value);
@@ -452,8 +456,7 @@ if (moduleName && credits && level && grade && subject) {
 
 });
 
-//Natural Sciences Stuff
-
+//Natural Sciences Subjects
 const naturalSciences = [
 'Astrophysics',
 'Biology',
@@ -484,20 +487,28 @@ function countNaturalScienceCredits(year) {
   return naturalScienceCredits;
 }
 
-// Updates the credits display function to include NatSci
+// Updates the credits display function to include NatSci, Major and Levels
 function displayCredits(year) {
   const yearRow = document.getElementById(year);
   const modules = Array.from(yearRow.getElementsByClassName('module-box'));
 
   let totalCredits = 0;
   let naturalSciencesCredits = 0;
+  let levelCount = {};
+
   modules.forEach((moduleBox) => {
     const credits = parseInt(moduleBox.dataset.credits);
     totalCredits += credits;
+    const level = moduleBox.dataset.level;
 
     if (naturalSciences.includes(moduleBox.dataset.subject)) {
       naturalSciencesCredits += credits;
     }
+
+    if (!levelCount[level]) {
+      levelCount[level] = 0;
+    }
+    levelCount[level]++;
   });
 
   const yearCreditsElement = document.getElementById(`${year}-credits`);
@@ -505,9 +516,26 @@ function displayCredits(year) {
 
   const naturalSciencesCreditsElement = document.getElementById(`${year}-naturalsciences-credits`);
   naturalSciencesCreditsElement.textContent = `Natural Sciences Credits: ${naturalSciencesCredits}`;
+
+  const levelCounts = modules.reduce((countObj, moduleBox) => {
+    const level = moduleBox.dataset.level;
+    const credits = parseInt(moduleBox.dataset.credits);
+
+    if (countObj[level]) {
+      countObj[level] += credits;
+    } else {
+      countObj[level] = credits;
+    }
+
+    return countObj;
+  }, {});
+
+  const levelCountElement = document.getElementById(`${year}-level-count`);
+  levelCountElement.textContent = Object.entries(levelCounts)
+    .map(([level, count]) => `${level}: ${count} cr`)
+    .join(', ');
+
 }
-
-
 
 
 //Recall Function
@@ -560,12 +588,15 @@ function updateMajorStatus(year) {
 
   const majorTickElement = document.getElementById(`${year}-major`);
 
-  if (majorCredits >= 60) {
+  const majorRequirement = year === 'Year-1' ? 40 : 60;
+
+  if (majorCredits >= majorRequirement) {
     majorTickElement.textContent = 'Major: ✅';
   } else {
     majorTickElement.textContent = 'Major: ❌';
   }
 }
+
 
 //Weighted average
 function calculateWeightedAverage(year) {
@@ -601,8 +632,8 @@ function showTemporaryMessage(message, duration = 2000) {
 }
 
 //undo button
-const undoButton = document.getElementById('undo');
-undoButton.addEventListener('click', undoLastModule);
+    const undoButton = document.getElementById('undo');
+    undoButton.addEventListener('click', undoLastModule);
 
 // event listener for recall-data
 document.getElementById('recall-data').addEventListener('click', () => {
@@ -707,23 +738,33 @@ function undoLastModule() {
     lastModuleBox.parentNode.removeChild(lastModuleBox);
 
     // Update the credit counter for the selected year
-    const year = lastModuleBox.dataset.year;
+    const year = lastModuleBox.dataset.year.replace(' ', '-');
     const yearCreditsElement = document.getElementById(`${year}-credits`);
     const creditsToRemove = parseInt(lastModuleBox.dataset.credits);
     const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
     yearCreditsElement.textContent = `Total Credits: ${currentYearCredits - creditsToRemove}`;
-    updateMajorStatus(year);
 
-    // After undoing a module
     // Update the major status and weighted average
     updateMajorStatus(year);
     const weightedAverage = calculateWeightedAverage(year);
     document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+    // Update the Natural Sciences credit counter
+    const naturalSciencesCreditsElement = document.getElementById(`${year}-naturalsciences-credits`);
+    const currentNaturalSciencesCredits = parseInt(naturalSciencesCreditsElement.textContent.replace(/\D/g, '')) || 0;
+    if (naturalSciences.includes(lastModuleBox.dataset.subject)) {
+      naturalSciencesCreditsElement.textContent = `Natural Sciences Credits: ${currentNaturalSciencesCredits - creditsToRemove}`;
+    }
+    // Update the level counters
+    const level = lastModuleBox.dataset.level;
+    const levelCreditsElement = document.getElementById(`${year}-level-${level}-credits`);
+    const currentLevelCredits = parseInt(levelCreditsElement.textContent.replace(/\D/g, '')) || 0;
+    levelCreditsElement.textContent = `Level ${level} Credits: ${currentLevelCredits - creditsToRemove}`;
+
   }
 }
 
-
-
+//Generate Unique Code
 function generateUniqueCode() {
   return Math.random().toString(36).substr(2, 8);
 }
