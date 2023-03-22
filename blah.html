@@ -759,14 +759,17 @@ function undoLastModule() {
     const creditsToRemove = parseInt(lastModuleBox.dataset.credits);
     const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
     yearCreditsElement.textContent = `Total Credits: ${currentYearCredits - creditsToRemove}`;
-    updateMajorStatus(year);
+    updateMajorStatus(year); // Add this line
 
     // After undoing a module
-    const weightedAverage = calculateWeightedAverage(year);
-    document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+const weightedAverage = calculateWeightedAverage(year);
+document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+
+
+
   }
 }
-
 
 
 // Here is added FRTP modules
