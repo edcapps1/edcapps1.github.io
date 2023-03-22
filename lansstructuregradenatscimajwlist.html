@@ -30,6 +30,26 @@
             font-family: sans-serif
             }
 
+            .form-group1 {
+            display: inline-block;
+            width: 200px;
+            margin-right: 0px;
+            padding: 10px 0;
+            }
+
+            .form-group2 {
+            display: inline-block;
+            width: 200px;
+            margin-right: 10px;
+            padding: 10px 0;
+            }
+
+            .form-group3 {
+            display: inline-block;
+            width: 250px;
+            margin-right: 10px;
+            padding: 10px 0;
+            }
             /* Style the navigation menu */
             nav ul {
             display: flex;
@@ -67,6 +87,11 @@
             border-radius: 8px;
         }
 
+        input[type="checkbox"] {
+        transform: scale(1.5);
+        margin-top: 5px;
+        }
+
         /* Headings */
         h1, h2, h3, h4, h5, h6 {
             font-weight: bold;
@@ -75,7 +100,7 @@
 
         /* Buttons */
         button {
-            background-color: #4CAF50;
+            background-color: #17adb8;
             border: none;
             color: white;
             padding: 10px 20px;
@@ -91,8 +116,13 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #120fd5;
         }
+        #module-form input[type="number"] {
+            width: 40%;
+            display: inline-block;
+            margin-right: 5%;
+            }
 
         /* Input fields */
         input[type="text"], select, input[type="number"] {
@@ -107,90 +137,90 @@
 
         /* Additional styling for specific elements can be added here */
         .container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-  .year-row, .unsorted-row {
-    display: flex;
-    gap: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 8px;
-    background-color: #f5f5f5;
-    position: relative;
-    transition: background-color 0.3s ease;
-  }
-  .temporary-message {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f0f0f0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-weight: bold;
-  z-index: 1000;
-}
+        .year-row, .unsorted-row {
+            display: flex;
+            gap: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #f5f5f5;
+            position: relative;
+        transition: background-color 0.3s ease;
+        }
+        .temporary-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #f0f0f0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-weight: bold;
+        z-index: 1000;
+        }
 
-  .module-box {
-  border: 2px solid #333;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 5px;
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background-color: #f0f0f0;
-}
-.module-box.purple {
-  background-color: #b19cd9;
-}
+        .module-box {
+        border: 2px solid #333;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-color: #f0f0f0;
+        }
+        .module-box.purple {
+        background-color: #b19cd9;
+        }
 
-.year-row {
-  display: flex;
-  flex-wrap: wrap;
-}
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 16px;
-}
+        .year-row {
+        display: flex;
+        flex-wrap: wrap;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
 
-.form-group label {
-    margin-bottom: 8px;
-}
-h3 {
-    font-size: 14px;
-    margin-bottom: 4px;
-    margin-top: 16px;
-    color: #000000;
-  text-transform: uppercase;
-}
+        .form-group label {
+            margin-bottom: 8px;
+        }
+        h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            margin-top: 16px;
+            color: #000000;
+        text-transform: uppercase;
+        }
 
-.unsorted-row, .year-row {
-    min-height: 60px;
-}
+        .unsorted-row, .year-row {
+            min-height: 60px;
+        }
 
-.tick {
-position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  background-color: #4CAF50;
-  border-radius: 50%;
-  display: none;
-  text-align: center;
-  line-height: 20px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 1px 1px #333;
-}
+        .tick {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        background-color: #4CAF50;
+        border-radius: 50%;
+        display: none;
+        text-align: center;
+        line-height: 20px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        text-shadow: 1px 1px #333;
+        }
 
 
     </style>
@@ -218,11 +248,15 @@ position: absolute;
                     <label for="module-name">Module Name:</label>
                     <input type="text" id="module-name" name="module-name" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group1">
+                    <label for="grade">Mark (%):</label>
+                    <input type="number" id="grade" name="grade" required>
+                </div>
+                <div class="form-group1">
                     <label for="credits">Credits:</label>
                     <input type="number" id="credits" name="credits" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group2">
                     <label for="level">Level:</label>
                     <select id="level" name="level">
                         <option value="LC">LC</option>
@@ -231,15 +265,12 @@ position: absolute;
                         <option value="LM">LM</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="grade">Grade (as a percentage):</label>
-                    <input type="number" id="grade" name="grade" required>
-                </div>
-                <div class="form-group">
+                
+                <div class="form-group3">
                     <label for="count-as-major">Count as major?</label>
                     <input type="checkbox" id="count-as-major" name="count-as-major">
                 </div>
-                <div class="form-group">
+                <div class="form-group2">
                     <label for="year">Year:</label>
                     <select id="year" name="year">
                       <option value="Year 1">Year 1</option>
@@ -345,8 +376,8 @@ position: absolute;
                 <button type="button" id="add-module">Add</button>
                 <button type="button" id="undo">Undo</button>
             </form>
-            <div class="form-group"><input type="text" id="unique-code" placeholder="Enter unique code">
-            <button id="recall-data">Recall Data</button>
+            <div class="form-group" style="width: 300px;"><input type="text" id="unique-code" placeholder="Enter unique code">
+            <button id="recall-data" style="background-color: blue;width: 100px;">Recall Data</button>
 
             </div>
 
@@ -356,7 +387,7 @@ position: absolute;
         <h2>Year 1 Credits </h2>
 <div> <!-- Here is the year rows where the modules will go-->     
 <div class="year-row" id="Year-1"></div>
-<p id="Year-1-credits">Total Credits:0</p>
+<p id="Year-1-credits">Total Credits: 0</p>
 <p id="Year-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-1-major">Major: ❌</p>
 <div id="Year-1-level-count" class="level-count"></div>
@@ -370,14 +401,14 @@ position: absolute;
 <p id="Year-2-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 3 Credits </h2>
 <div class="year-row" id="Year-3"></div>
-<p id="Year-3-credits">Total Credits:0</p>
+<p id="Year-3-credits">Total Credits: 0</p>
 <p id="Year-3-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-3-major">Major: ❌</p>
 <div id="Year-3-level-count" class="level-count"></div>
 <p id="Year-3-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 4 Credits </h2>
 <div class="year-row" id="Year-4"></div>
-<p id="Year-4-credits">Total Credits:0</p>
+<p id="Year-4-credits">Total Credits: 0</p>
 <p id="Year-4-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-4-major">Major: ❌</p>
 <div id="Year-4-level-count" class="level-count"></div>
