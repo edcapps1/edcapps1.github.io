@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberal Arts and Natural Sciences Degree Planner</title>
-    <style>
+    <style> /* Style CSS */
         /* Basic styling and layout */
         body {
             font-family: Arial, sans-serif;
@@ -209,9 +209,9 @@ position: absolute;
       <p>Here you'll see the way to enter your modules one by one. Enter the modules in, each module you add will give you a unique code and from that you can access previous models of your degree. If you don't want to put any grades in, enter 0. If you have enough credits for a major, you'll see a tick! Below here you'll see info on how to save your progress once youve added your modules</p>
       <h4 id="unique-code"></h4>
 
-      <div id="app">
+      <div id="app"> <!-- Here is the HTML for the inputting module info page-->
 
-        <div class="module-entry">
+        <div class="module-entry"> 
             <h2>Module Entry</h2>
             <form id="module-form">
                 <div class="form-group">
@@ -249,7 +249,7 @@ position: absolute;
                     </select>
                   </div>
                   
-                <div class="form-group">
+                <div class="form-group"> <!-- This is the list of availible subjects-->
                     <label for="subject">Subject:</label>
                     <select id="subject" name="subject">
                       <option value="Academic Pract and Org Dev">Academic Pract and Org Dev</option>
@@ -354,7 +354,7 @@ position: absolute;
       
         
         <h2>Year 1 Credits </h2>
-     
+<div> <!-- Here is the year rows where the modules will go-->     
 <div class="year-row" id="Year-1"></div>
 <p id="Year-1-credits">Total Credits:0</p>
 <p id="Year-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
@@ -371,18 +371,18 @@ position: absolute;
 <h2>Year 3 Credits </h2>
 <div class="year-row" id="Year-3"></div>
 <p id="Year-3-credits">Total Credits:0</p>
-<p id="Year-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
+<p id="Year-3-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-3-major">Major: ❌</p>
-<div id="Year-2-level-count" class="level-count"></div>
+<div id="Year-3-level-count" class="level-count"></div>
 <p id="Year-3-weighted-average">Weighted Average: 0 %</p>
 <h2>Year 4 Credits </h2>
 <div class="year-row" id="Year-4"></div>
 <p id="Year-4-credits">Total Credits:0</p>
-<p id="Year-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
+<p id="Year-4-naturalsciences-credits">Natural Sciences Credits: 0</p>
 <p id="Year-4-major">Major: ❌</p>
-<div id="Year-2-level-count" class="level-count"></div>
+<div id="Year-4-level-count" class="level-count"></div>
 <p id="Year-4-weighted-average">Weighted Average: 0 %</p>
-        
+</div>  
 
       
 <script>
