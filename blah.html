@@ -212,7 +212,9 @@ position: absolute;
             <form id="module-form">
                 <div class="form-group">
                     <label for="module-name">Module Name:</label>
-                    <input type="text" id="module-name" name="module-name" required>
+                    <input list="module-titles" id="module-name" type="text" placeholder="Module Name">
+                      <datalist id="module-titles"></datalist>
+
                 </div>
                 <div class="form-group">
                   <label for="module-code">Module Code:</label> 
@@ -360,15 +362,42 @@ let allModules = [];
 loadAllModuleData().then(data => {
   allModules = data;
   populateDatalist();
+  populateTitlesDatalist();
 });
 
-// Populate the datalist with module codes
-function populateDatalist() {
-  const moduleCodesDatalist = document.getElementById('module-codes');
+//populate the list with module titles
+function populateTitlesDatalist() {
+  const moduleTitlesDatalist = document.getElementById('module-titles');
   allModules.forEach(module => {
     const option = document.createElement('option');
-    option.value = module.code;
-    moduleCodesDatalist.appendChild(option);
+    option.value = module.title;
+    moduleTitlesDatalist.appendChild(option);
+  });
+}
+
+// Event listener for module code input
+document.getElementById('module-code').addEventListener('keyup', () => {
+  const query = document.getElementById('module-code').value;
+  findModuleByCode(query);
+});
+
+// Event listener for module name input
+document.getElementById('module-name').addEventListener('keyup', () => {
+  const query = document.getElementById('module-name').value;
+  filterModuleTitles(query);
+});
+
+// Filter module titles based on user input
+function filterModuleTitles(query) {
+  const moduleTitlesDatalist = document.getElementById('module-titles');
+  moduleTitlesDatalist.innerHTML = '';
+  
+  const filteredModules = allModules.filter(module => module.title.toLowerCase().startsWith(query.toLowerCase()));
+  
+  filteredModules.forEach(module => {
+    const option = document.createElement('option');
+    option.value = module.title;
+    moduleTitlesDatalist.appendChild(option);
   });
 }
 
