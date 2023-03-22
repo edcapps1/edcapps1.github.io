@@ -215,6 +215,12 @@ position: absolute;
                     <input type="text" id="module-name" name="module-name" required>
                 </div>
                 <div class="form-group">
+                  <label for="module-code">Module Code:</label> 
+                      <input type="text" id="module-code" name="module-code" list="module-codes" />
+                      <button id="search-module">Search</button>
+                      <datalist id="module-codes"></datalist>
+                </div>
+                <div class="form-group">
                     <label for="credits">Credits:</label>
                     <input type="number" id="credits" name="credits" required>
                 </div>
@@ -330,6 +336,61 @@ position: absolute;
 
       
       <script>
+// Scanning the Json files for the data and giving it the ability to be added:
+
+// Adding in the json files 
+async function loadModuleData(fileUrl) {
+  const response = await fetch(fileUrl);
+  const moduleData = await response.json();
+  return moduleData;
+}
+
+async function loadAllModuleData() {
+  const lcModules = await loadModuleData('./lc_modules.json');
+  const liModules = await loadModuleData('./li_modules.json');
+  const lhModules = await loadModuleData('./lh_modules.json');
+  
+  return [...lcModules, ...liModules, ...lhModules];
+}
+
+
+
+// Load module data on page load
+let allModules = [];
+loadAllModuleData().then(data => {
+  allModules = data;
+  populateDatalist();
+});
+
+// Populate the datalist with module codes
+function populateDatalist() {
+  const moduleCodesDatalist = document.getElementById('module-codes');
+  allModules.forEach(module => {
+    const option = document.createElement('option');
+    option.value = module.code;
+    moduleCodesDatalist.appendChild(option);
+  });
+}
+
+// Event listener for search button
+document.getElementById('search-module').addEventListener('click', () => {
+  const query = document.getElementById('module-code').value;
+  findModuleByCode(query);
+});
+
+// Find module by code and update the form with the module data
+function findModuleByCode(query) {
+  const matchedModule = allModules.find(module => module.code.toLowerCase() === query.toLowerCase());
+  if (matchedModule) {
+    document.getElementById('module-name').value = matchedModule.title;
+    document.getElementById('credits').value = matchedModule.credits;
+    document.getElementById('level').value = matchedModule.level;
+    document.getElementById('subject').value = matchedModule.subject;
+  } else {
+    alert('Module not found');
+  }
+}
+
 
 
 const addedModules = [];
@@ -354,7 +415,7 @@ if (moduleName && credits && level && grade && subject) {
     const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
-  
+    addedModules.push(moduleBox);
 
     // Update the credit counter for the selected year
     const yearCreditsElement = document.getElementById(`${year.replace(' ', '-')}-credits`);
@@ -595,9 +656,9 @@ function undoLastModule() {
     const creditsToRemove = parseInt(lastModuleBox.dataset.credits);
     const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
     yearCreditsElement.textContent = `Total Credits: ${currentYearCredits - creditsToRemove}`;
-
-    // Update the major status and weighted average
     updateMajorStatus(year);
+
+    // After undoing a module
     const weightedAverage = calculateWeightedAverage(year);
     document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
   }
@@ -630,6 +691,7 @@ const defaultModules = [
 function generateUniqueCode() {
   return Math.random().toString(36).substr(2, 8);
 }
+
 
 
     </script>
