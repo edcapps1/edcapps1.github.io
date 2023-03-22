@@ -354,7 +354,7 @@ if (moduleName && credits && level && grade && subject) {
     const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
-    addedModules.push(moduleBox);
+  
 
     // Update the credit counter for the selected year
     const yearCreditsElement = document.getElementById(`${year.replace(' ', '-')}-credits`);
@@ -595,9 +595,9 @@ function undoLastModule() {
     const creditsToRemove = parseInt(lastModuleBox.dataset.credits);
     const currentYearCredits = parseInt(yearCreditsElement.textContent.replace(/\D/g, '')) || 0;
     yearCreditsElement.textContent = `Total Credits: ${currentYearCredits - creditsToRemove}`;
-    updateMajorStatus(year);
 
-    // After undoing a module
+    // Update the major status and weighted average
+    updateMajorStatus(year);
     const weightedAverage = calculateWeightedAverage(year);
     document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
   }
