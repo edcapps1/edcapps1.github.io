@@ -183,6 +183,11 @@
         background-color: #b19cd9;
         }
 
+        .totals_group {
+            display: inline-block;
+            width: auto;
+            }
+
         .Stage-row {
         display: flex;
         flex-wrap: wrap;
@@ -239,7 +244,7 @@
           </ul>
         </nav>
       </header>
-      <p>Here you'll see the way to enter your modules one by one. Enter the modules in, each module you add will give you a unique code and from that you can access previous models of your degree. If you don't want to put any grades in, enter 0. If you have enough credits for a major, you'll see a tick! Below here you'll see info on how to save your progress once youve added your modules</p>
+      <p>Here you'll see the way to enter your modules one by one. Enter the modules in, for Stage 1 and your chosen stage 2 modules, then final Name modules for stage 3</p>
      <h3 class="form-group">Please note all grades are purely indicative, please double check any results yourself.</h3>
      <p> If you enter a module code it will fill in all the other details. If you want to quickly re-fill out the form, note all the module codes. please screenshot if you want to save it! The undo button is a little buggy.</p>
       <h4 id="unique-code"></h4>
@@ -379,25 +384,37 @@
         <h2>Stage 1 Credits </h2>
 <div> <!-- Here is the Stage rows where the modules will go-->     
 <div class="Stage-row" id="Stage-1"></div>
-<p id="Stage-1-credits">Total Credits: 0</p>
-<p id="Stage-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
-<p id="Stage-1-major">Major: ❌</p>
-<div id="Stage-1-level-count" class="level-count"></div>
-<p id="Stage-1-weighted-average">Weighted Average: 0 %</p>
+<p class="totals_group" id="Stage-1-credits">Total Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-1-major">Major: ❌</p>
+<p class="totals_group">||</p>
+<div id="Stage-1-level-count" class="totals_group"></div>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-1-weighted-average">Weighted Average: 0 %</p>
 <h2>Stage 2 Credits </h2>
 <div class="Stage-row" id="Stage-2"></div>
-<p id="Stage-2-credits">Total Credits: 0</p>
-<p id="Stage-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
-<p id="Stage-2-major">Major: ❌</p>
-<div id="Stage-2-level-count" class="level-count"></div>
-<p id="Stage-2-weighted-average">Weighted Average: 0 %</p>
+<p class="totals_group" id="Stage-2-credits">Total Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-2-naturalsciences-credits">Natural Sciences Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-2-major">Major: ❌</p>
+<p class="totals_group">||</p>
+<div id="Stage-2-level-count" class="totals_group"></div>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-2-weighted-average">Weighted Average: 0 %</p>
 <h2>Stage 3 Credits </h2>
 <div class="Stage-row" id="Stage-3"></div>
-<p id="Stage-3-credits">Total Credits: 0</p>
-<p id="Stage-3-naturalsciences-credits">Natural Sciences Credits: 0</p>
-<p id="Stage-3-major">Major: ❌</p>
-<div id="Stage-3-level-count" class="level-count"></div>
-<p id="Stage-3-weighted-average">Weighted Average: 0 %</p>
+<p class="totals_group" id="Stage-3-credits">Total Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-3-naturalsciences-credits">Natural Sciences Credits: 0</p>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-3-major">Major: ❌</p>
+<p class="totals_group">||</p>
+<div id="Stage-3-level-count" class="totals_group"></div>
+<p class="totals_group">||</p>
+<p class="totals_group" id="Stage-3-weighted-average">Weighted Average: 0 %</p>
 </div>  
 
 <div>
