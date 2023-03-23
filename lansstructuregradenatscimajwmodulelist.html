@@ -3,7 +3,10 @@
 <html lang="en">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberal Arts and Natural Sciences Degree Planner</title>
@@ -240,6 +243,7 @@
      <p class="form-group">Please note all grades are purely indicative, please double check any results yourself.</p>
      <p> Currently the recall feature is not working, please screenshot if you want to save it! The undo button is a little buggy.</p>
       <h4 id="unique-code"></h4>
+      <div id="json-loaded-signifier" style="display: none;">✓ JSON Loaded</div>
 
       <div id="app"> <!-- Here is the HTML for the inputting module info page-->
 
@@ -249,6 +253,11 @@
                 <div class="form-group">
                     <label for="module-name">Module Name:</label>
                     <input type="text" id="module-name" name="module-name" required>
+                </div>
+                <div class="form-group3">
+                    <label for="module-code">Module Code:</label>
+                    <input type="text" id="module-code" name="module-code" placeholder="Enter module code">
+                    <button type="button" id="find-module">Find</button>
                 </div>
                 <div class="form-group1">
                     <label for="grade">Mark (%):</label>
@@ -424,6 +433,23 @@
 
 const addedModules = [];
 
+//fetchingmodules from the modules file
+async function fetchModules() {
+  const response = await fetch('mod_list.json');
+  const data = await response.json();
+  return data;
+}
+
+let modulesData = [];
+fetchModules().then((data) => {
+  modulesData = data;
+});
+
+function searchModule(moduleCode) {
+  const module = modulesData.find((m) => m.moduleCode === parseInt(moduleCode));
+  return module;
+}
+
 //Form Details, creating the array of modules
 document.getElementById('add-module').addEventListener('click', () => {
   const moduleName = document.getElementById('module-name').value;
@@ -433,6 +459,7 @@ document.getElementById('add-module').addEventListener('click', () => {
   const subject = document.getElementById('subject').value;
   const year = document.getElementById('year').value;
   const countAsMajor = document.getElementById('count-as-major').checked; // Add this line
+  document.getElementById('module-code').value = '';
 
   
 
@@ -460,7 +487,7 @@ if (moduleName && credits && level && grade && subject) {
 
    // Save the added modules to local storage
    const uniqueCode = generateUniqueCode();
-    localStorage.setItem(uniqueCode, JSON.stringify(addedModules.map(moduleBox => ({
+   saveModulesToFile(uniqueCode, addedModules.map(moduleBox => ({
       moduleName: moduleBox.querySelector('h3').textContent,
       credits: moduleBox.dataset.credits,
       level: moduleBox.dataset.level,
@@ -468,7 +495,7 @@ if (moduleName && credits && level && grade && subject) {
       subject: moduleBox.dataset.subject,
       year: moduleBox.dataset.year,
       countAsMajor: moduleBox.dataset.countAsMajor
-    }))));
+    })));
 
     // Show the unique code to the user
     const uniqueCodeElement = document.getElementById('unique-code');
@@ -489,6 +516,27 @@ if (moduleName && credits && level && grade && subject) {
 
 }
 
+});
+
+
+
+//find module event listener
+document.getElementById('find-module').addEventListener('click', () => {
+  const moduleCode = document.getElementById('module-code').value;
+
+  if (moduleCode) {
+    const module = searchModule(moduleCode);
+    if (module) {
+      document.getElementById('module-name').value = module.moduleName;
+      document.getElementById('credits').value = module.credits;
+      document.getElementById('level').value = module.level;
+      document.getElementById('subject').value = module.Name;
+    } else {
+      alert('Module not found. Please enter a valid module code.');
+    }
+  } else {
+    alert('Please enter a module code.');
+  }
 });
 
 //Natural Sciences Subjects
@@ -575,7 +623,7 @@ function displayCredits(year) {
 
 //Recall Function
 function recallData(uniqueCode) {
-  const storedData = localStorage.getItem(uniqueCode);
+  fetchModuleDataFromFile(uniqueCode).then((storedData) => {
 
   if (storedData) {
     // Clear the current layout before appending the saved modules
@@ -609,7 +657,7 @@ function recallData(uniqueCode) {
   } else {
     alert('Invalid unique code. Please enter a valid code.');
   }
-}
+})}
 
 //Major Status
 function updateMajorStatus(year) {
@@ -828,6 +876,53 @@ function undoLastModule() {
 function generateUniqueCode() {
   return Math.random().toString(36).substr(2, 8);
 }
+
+//Checking json is loaded
+function loadJson() {
+  fetch('mod_list.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to load the JSON file');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Handle the JSON data
+      moduleData = data.modules;
+      document.getElementById('json-loaded-signifier').style.display = 'block';
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+//saveModuleToFile
+async function saveModulesToFile(uniqueCode, moduleData) {
+  const response = await fetch('save_modules.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uniqueCode, moduleData }),
+  });
+
+  if (!response.ok) {
+    alert('Failed to save modules to file.');
+  }
+}
+
+//fetchmoduledatafromfile
+async function fetchModuleDataFromFile(uniqueCode) {
+  const response = await fetch(`modules_data/${uniqueCode}.json`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch modules from file.');
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 
 
     </script>

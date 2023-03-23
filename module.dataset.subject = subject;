@@ -1,0 +1,2 @@
+module.dataset.subject = subject;
+                module.style.width = `${credits * 2}px`;
