@@ -233,9 +233,9 @@
         <h1>Liberal Arts and Natural Sciences Degree Planner</h1>
         <nav>
           <ul>
-            <li><a href="main.html">Main</a></li>
-            <li><a href="stage-2-selector.html">Stage 2 Selector</a></li>
-            <li><a href="grade-calculator.html">Grade Calculator</a></li>
+            <li><a href="lansstructuregradenatscimajwmodulelist.html">Construct your degree</a></li>
+            <li><a href="Stage-2-selector.html">Stage 2 Selector</a></li>
+            <li><a href="StageCreditsGrade.html">Stage 1-3 Degree Grade Calculator</a></li>
           </ul>
         </nav>
       </header>
@@ -263,7 +263,7 @@
                 <p></p>
                 <div class="form-group1">
                     <label for="grade">Mark (%):</label>
-                    <input type="number" id="grade" name="grade" placeholder="opt">
+                    <input type="number" id="grade" name="grade" placeholder="opt" optional>
                 </div>
                 <div class="form-group1">
                     <label for="credits">Credits:</label>
@@ -480,7 +480,7 @@ if (!['Year 1', 'Year 2', 'Year 3', 'Year 4'].includes(year)) {
   return;
 }
 
-if (moduleName && credits && level && grade && subject && moduleCode) {
+if (moduleName && credits && level && subject && moduleCode) {
     const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
