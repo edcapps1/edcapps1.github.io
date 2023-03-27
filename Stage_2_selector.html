@@ -384,17 +384,7 @@
         
         <h2>Year 1 Credits </h2>
 <div> <!-- Here is the year rows where the modules will go-->     
-<div class="year-row" id="Year-1"></div>
-<p class="totals_group" id="Year-1-credits">Total Credits: 0</p>
-<p class="totals_group">||</p>
-<p class="totals_group" id="Year-1-naturalsciences-credits">Natural Sciences Credits: 0</p>
-<p class="totals_group">||</p>
-<p class="totals_group" id="Year-1-major">Major: ❌</p>
-<p class="totals_group">||</p>
-<div id="Year-1-level-count" class="totals_group"></div>
-<p class="totals_group">||</p>
-<p class="totals_group" id="Year-1-weighted-average">Weighted Average: 0 %</p>
-<h2>Year 2 Credits </h2>
+<<h2>Year 2 Credits </h2>
 <div class="year-row" id="Year-2"></div>
 <p class="totals_group" id="Year-2-credits">Total Credits: 0</p>
 <p class="totals_group">||</p>
@@ -416,7 +406,7 @@
 <div id="Year-3-level-count" class="totals_group"></div>
 <p class="totals_group">||</p>
 <p class="totals_group" id="Year-3-weighted-average">Weighted Average: 0 %</p>
-<h2>Year 4 Credits </h2>
+<h2>Stage 2 Credits </h2>
 <div class="year-row" id="Year-4"></div>
 <p class="totals_group" id="Year-4-credits">Total Credits: 0</p>
 <p class="totals_group">||</p>
@@ -504,6 +494,8 @@ if (!['Year 1', 'Year 2', 'Year 3', 'Year 4'].includes(year)) {
 
 if (moduleName && credits && level && subject && moduleCode) {
     const moduleBox = createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor); // Update this line
+    moduleBox.id = `module-${Date.now()}`; // Add this line
+    enableDragging(moduleBox); // Enable Dragging
     const yearRow = document.getElementById(year.replace(' ', '-'));
     yearRow.appendChild(moduleBox);
     addedModules.push(moduleBox);
@@ -604,6 +596,7 @@ function countNaturalScienceCredits(year) {
 
 // Updates the credits display function to include NatSci, Major and Levels
 function displayCredits(year) {
+    if (year === 'Stage-Two-Credits') return; // Add this line
   const yearRow = document.getElementById(year);
   const modules = Array.from(yearRow.getElementsByClassName('module-box'));
 
@@ -650,6 +643,15 @@ function displayCredits(year) {
     .map(([level, count]) => `${level}: ${count} cr`)
     .join(', ');
 
+}
+
+//Drag enable
+function enableDragging(moduleBox) {
+  moduleBox.setAttribute('draggable', 'true');
+
+  moduleBox.addEventListener('dragstart', (event) => {
+    event.dataTransfer.setData('text/plain', event.target.id);
+  });
 }
 
 
@@ -713,77 +715,6 @@ function showTemporaryMessage(message, duration = 2000) {
     const undoButton = document.getElementById('undo');
     undoButton.addEventListener('click', undoLastModule);
 
-
-//Subject Colours
-const subjectColors = {
-'Academic Pract and Org Dev': '#FFE8D6',
-'Academic Services': '#FFD1DC',
-'African Studies and Anthropology': '#F1D1FF',
-'Department of Art History, Curating and Visual Studies': '#FFF7B2',
-'Birmingham Business School': '#C9EFFF',
-'Birmingham Clinical Trials Unit (BCTU)': '#D6FFF5',
-'Birmingham International Academy': '#E1D1FF',
-'Birmingham Int Summer School': '#D8EFFF',
-'Birmingham Law School': '#FFD1E1',
-'Biomedical Sciences': '#F1E6FF',
-'CAL - College Hub': '#FFE5D1',
-'CAL - Others': '#FFE9D9',
-'Cancer Clinical Trials Unit (CCTU)': '#E5FCE1',
-'Cancer Studies': '#C3FFF2',
-'Centre for Byzantine, Ottoman and Modern Greek Studies': '#FFE1FF',
-'Chemical Engineering': '#FFD1F7',
-'Chemistry': '#EBCEDF',
-'Classics, Ancient History and Archaeology': '#F0EFC3',
-'Computer Science': '#D6FFF5',
-'Disability, Inclusion and Special Needs': '#D1E8FF',
-'Dental Hygiene and Therapy': '#FFE1D1',
-'Dentistry': '#FFE1D9',
-'Drama and Theatre Arts': '#F0D7FF',
-'Earth and Environmental Sciences': '#FFE1D1',
-'Economics': '#FFE5C4',
-'Education and Social Justice': '#FFEED1',
-'Educational Enterprise': '#C3F2E8',
-'Electronic, Electrical and Systems Engineering': '#D1FFEC',
-'English Language and Linguistics': '#C2F2D0',
-'English Literature': '#E6DCEB',
-'English, Drama and Creative Studies': '#E1D1FF',
-'EPS - College Hub': '#FFD3D3',
-'EPS - Others': '#F1D1FF',
-'Film and Creative Writing': '#F9E1D7',
-'Finance': '#C2E9FF',
-'Geography': '#FFE1D1',
-'Government': '#D9E0F2',
-'Graduate School': '#D1FFD3',
-'Health Services Management Centre': '#FFE8D6',
-'HEFI': '#FFD1DC',
-'History': '#F1D1FF',
-'Institute of Applied Health Research': '#FFF7B2',
-'Institute of Cancer and Genomic Sciences': '#C9EFFF',
-'Institute of Forest Research': '#D6FFF5',
-'Institute of Local Government Studies': '#E1D1FF',
-'International Development': '#D8EFFF',
-'Ironbridge International Institute for Cultural Heritage': '#FFD1E1',
-'Languages for All': '#F1E6FF',
-'Languages, Cultures, Art History and Music': '#FFE5D1',
-'Liberal Arts & Natural Science': '#FFE9D9',
-'Management': '#E5FCE1',
-'Marketing': '#C3FFF2',
-'Mathematics': '#FFE1FF',
-'MDS - College Hub': '#FFD1F7',
-'School of Engineering': '#FFE9D9',
-'School of Geog Earth & Env Sci': '#F0EFC3',
-'School of Psychology': '#D6FFF5',
-'School of Social Policy': '#FFE1D1',
-'Shakespeare Institute': '#E1D1FF',
-'Social Policy': '#C2F2D0',
-'Social Policy, Sociology and Criminology': '#FFE5D1',
-'Social Work and Social Care': '#FFEED1',
-'Sport, Ex and Rehab Sciences': '#D1FFD3',
-'Strategy and International Business': '#FFD1E1',
-'Teacher Education': '#F1E6FF',
-'Theology and Religion': '#D6FFF5',
-'Wiley': '#E1D1FF'
-}
 
 //Module Box creation
 function createModuleBox(moduleName, credits, level, grade, subject, year, countAsMajor, color = null, isEditable = false) {
@@ -891,6 +822,132 @@ function addModuleToList(moduleName, moduleCode, credits, level, grade, subject,
   moduleList.appendChild(listItem);
 }
 
+//drag and drop function
+const stageTwoCreditsRow = document.getElementById('Stage-Two-Credits');
+stageTwoCreditsRow.addEventListener('dragover', (event) => {
+  event.preventDefault();
+});
+
+stageTwoCreditsRow.addEventListener('drop', (event) => {
+  event.preventDefault();
+  const moduleId = event.dataTransfer.getData('text/plain');
+  const moduleBox = document.getElementById(moduleId);
+  const previousYear = moduleBox.dataset.year.replace(' ', '-');
+
+  // Move the module box
+  stageTwoCreditsRow.appendChild(moduleBox);
+
+  // Update the credit counters
+  displayCredits(previousYear);
+  displayCredits('Stage-Two-Credits');
+
+  // Update the major status and weighted average
+  updateMajorStatus(previousYear);
+  const weightedAverage = calculateWeightedAverage(previousYear);
+  document.getElementById(`${previousYear}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+  // Clear the drag data
+  event.dataTransfer.clearData();
+});
+['Year-1', 'Year-2', 'Year-3', 'Year-4', 'Year-Abroad'].forEach((year) => {
+  const yearRow = document.getElementById(year);
+  yearRow.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  yearRow.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const moduleId = event.dataTransfer.getData('text/plain');
+    const moduleBox = document.getElementById(moduleId);
+    const previousYear = moduleBox.dataset.year.replace(' ', '-');
+
+    // Move the module box
+    yearRow.appendChild(moduleBox);
+
+    // Update the credit counters
+    displayCredits(previousYear);
+    displayCredits(year);
+
+    // Update the major status and weighted average
+    updateMajorStatus(year);
+    const weightedAverage = calculateWeightedAverage(year);
+    document.getElementById(`${year}-weighted-average`).textContent = `Weighted Average: ${weightedAverage.toFixed(2)}`;
+
+    // Clear the drag data
+    event.dataTransfer.clearData();
+  });
+});
+
+//Subject Colours
+const subjectColors = {
+'Academic Pract and Org Dev': '#FFE8D6',
+'Academic Services': '#FFD1DC',
+'African Studies and Anthropology': '#F1D1FF',
+'Department of Art History, Curating and Visual Studies': '#FFF7B2',
+'Birmingham Business School': '#C9EFFF',
+'Birmingham Clinical Trials Unit (BCTU)': '#D6FFF5',
+'Birmingham International Academy': '#E1D1FF',
+'Birmingham Int Summer School': '#D8EFFF',
+'Birmingham Law School': '#FFD1E1',
+'Biomedical Sciences': '#F1E6FF',
+'CAL - College Hub': '#FFE5D1',
+'CAL - Others': '#FFE9D9',
+'Cancer Clinical Trials Unit (CCTU)': '#E5FCE1',
+'Cancer Studies': '#C3FFF2',
+'Centre for Byzantine, Ottoman and Modern Greek Studies': '#FFE1FF',
+'Chemical Engineering': '#FFD1F7',
+'Chemistry': '#EBCEDF',
+'Classics, Ancient History and Archaeology': '#F0EFC3',
+'Computer Science': '#D6FFF5',
+'Disability, Inclusion and Special Needs': '#D1E8FF',
+'Dental Hygiene and Therapy': '#FFE1D1',
+'Dentistry': '#FFE1D9',
+'Drama and Theatre Arts': '#F0D7FF',
+'Earth and Environmental Sciences': '#FFE1D1',
+'Economics': '#FFE5C4',
+'Education and Social Justice': '#FFEED1',
+'Educational Enterprise': '#C3F2E8',
+'Electronic, Electrical and Systems Engineering': '#D1FFEC',
+'English Language and Linguistics': '#C2F2D0',
+'English Literature': '#E6DCEB',
+'English, Drama and Creative Studies': '#E1D1FF',
+'EPS - College Hub': '#FFD3D3',
+'EPS - Others': '#F1D1FF',
+'Film and Creative Writing': '#F9E1D7',
+'Finance': '#C2E9FF',
+'Geography': '#FFE1D1',
+'Government': '#D9E0F2',
+'Graduate School': '#D1FFD3',
+'Health Services Management Centre': '#FFE8D6',
+'HEFI': '#FFD1DC',
+'History': '#F1D1FF',
+'Institute of Applied Health Research': '#FFF7B2',
+'Institute of Cancer and Genomic Sciences': '#C9EFFF',
+'Institute of Forest Research': '#D6FFF5',
+'Institute of Local Government Studies': '#E1D1FF',
+'International Development': '#D8EFFF',
+'Ironbridge International Institute for Cultural Heritage': '#FFD1E1',
+'Languages for All': '#F1E6FF',
+'Languages, Cultures, Art History and Music': '#FFE5D1',
+'Liberal Arts & Natural Science': '#FFE9D9',
+'Management': '#E5FCE1',
+'Marketing': '#C3FFF2',
+'Mathematics': '#FFE1FF',
+'MDS - College Hub': '#FFD1F7',
+'School of Engineering': '#FFE9D9',
+'School of Geog Earth & Env Sci': '#F0EFC3',
+'School of Psychology': '#D6FFF5',
+'School of Social Policy': '#FFE1D1',
+'Shakespeare Institute': '#E1D1FF',
+'Social Policy': '#C2F2D0',
+'Social Policy, Sociology and Criminology': '#FFE5D1',
+'Social Work and Social Care': '#FFEED1',
+'Sport, Ex and Rehab Sciences': '#D1FFD3',
+'Strategy and International Business': '#FFD1E1',
+'Teacher Education': '#F1E6FF',
+'Theology and Religion': '#D6FFF5',
+'Wiley': '#E1D1FF'
+}
 
 
     </script>
